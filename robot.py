@@ -1,6 +1,6 @@
 import wpilib
 
-class MyRobot(wpilib.IterativeRobot):
+class StampedeRobot(wpilib.IterativeRobot):
     '''Main robot class'''
 
     def RobotInit(self):
