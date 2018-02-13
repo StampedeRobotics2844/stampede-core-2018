@@ -53,11 +53,11 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.right_stick = wpilib.Joystick(1)
 
         # initialize gyro
-        # self.gyro = wpilib.ADXRS450_Gyro()
+        self.gyro = wpilib.ADXRS450_Gyro()
 
         # initialize Accelerometer
-        # self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kOnboard,
-        # wpilib.ADXL345_SPI.Range.k2G)
+        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,
+        #    wpilib.ADXL345_SPI.Range.k2G)
 
 
     def autonomousInit(self):
