@@ -76,6 +76,10 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.elevator_motor = wpilib.Spark(portmap.motors.elevator)
 
+        self.climb_motor = wpilib.Victor(portmap.motors.climb)
+
+        self.claw_motor = wpilib.Victor(portmap.motors.claw)
+
         # initialize drive
         self.drive = wpilib.drive.DifferentialDrive(self.drive_l_motor, self.drive_r_motor)
         self.drive.setExpiration(0.1)
@@ -126,21 +130,30 @@ class StampedeRobot(wpilib.IterativeRobot):
         
         try:
 
-            if self.left_stick.getTrigger():
+            if self.left_stick.getRawButton(portmap.joysticks.red_button_intake):
                 self.claw_lintake_motor.set(1)
                 self.claw_rintake_motor.set(1)
-            elif self.right_stick.getTrigger():
+            elif self.right_stick.getRawButton(portmap.joysticks.blue_button_outtake):
                 self.claw_lintake_motor.set(-1)
                 self.claw_rintake_motor.set(-1)
             else:
                 self.claw_lintake_motor.set(0)
                 self.claw_rintake_motor.set(0)
 
-            if self.left_stick.getTrigger():
+            if self.left_stick.getRawButton(portmap.joysticks.yellow_button_up_elevator):
                 self.elevator_motor.set(1)
+            elif self.left_stick.getRawButton(portmap.joysticks.green_button_down_elevator):
+                self.elevator_motor.set(-1)
             else:
                 self.elevator_motor.set(0)
             
+            if self.left_stick.getRawButton(portmap.joysticks.white_button_claw_up):
+                self.claw_motor.set(1)
+            elif self.left_stick.getRawButton(portmap.joysticks.white_button_claw_down):
+                self.claw_motor.set(-1)
+            else:
+                self.claw_motor.set(0)
+
             self.drive.tankDrive(self.left_stick.getY(), self.right_stick.getY(), True)
 
         except:
