@@ -10,6 +10,7 @@ import wpilib.drive
 import logging
 import portmap
 
+from robotpy_ext.autonomous import StatefulAutonomous, timed_state
 from networktables import NetworkTables
 from robotpy_ext.autonomous import AutonomousModeSelector
 
@@ -21,6 +22,15 @@ class StampedeRobot(wpilib.IterativeRobot):
         super().__init__()
 
         self.smart_dashboard = None
+        self.motor_speed_stop = 0
+
+        self.robot_speed = None
+        self.intake_speed = None
+        self.outake_speed = None
+        self.elevator_speed_up = None
+        self.elevator_speed_down = None
+        self.claw_speed = None
+        self.climber_speed = None
 
         self.drive_r_motor = None
         self.drive_l_motor = None
@@ -43,6 +53,16 @@ class StampedeRobot(wpilib.IterativeRobot):
         '''Robot-wide Initialization code'''
         #Initializing Smart Dashboard
         self.smart_dashboard = NetworkTables.getTable("SmartDashboard")
+
+        #Initializing networktables
+        self.smart_dashboard = NetworkTables.getTable("SmartDashboard")
+        self.smart_dashboard.putNumber('robot_speed', 1)
+        self.smart_dashboard.putNumber('intake_speed', 1)
+        self.smart_dashboard.putNumber('outake_speed', 1)
+        self.smart_dashboard.putNumber('elevator_speed_up', 1)
+        self.smart_dashboard.putNumber('elevator_speed_down', 1)
+        self.smart_dashboard.putNumber('claw_speed', 1)
+        self.smart_dashboard.putNumber('climber_speed', 1)
 
         # initialize and launch the camera
         wpilib.CameraServer.launch()
@@ -70,15 +90,24 @@ class StampedeRobot(wpilib.IterativeRobot):
         # initialize Accelerometer
         #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,
         #    wpilib.ADXL345_SPI.Range.k2G)
+  
+        # initialize autonomous components
+        self.components = {
+            'drive': self.drive,
+            'drive_r_motor': self.drive_r_motor,
+            'drive_l_motor': self.drive_l_motor,
+            'claw_rintake_motor': self.claw_rintake_motor,
+            'claw_lintake_motor': self.claw_lintake_motor,
+            'elevator_motor': self.elevator_motor
+        }
 
+        self.automodes = AutonomousModeSelector('autonomous', self.components)
 
     def autonomousInit(self):
-        '''Called only at the beginning'''
-        pass
+        self.drive.setSafetyEnabled(True)
 
     def autonomousPeriodic(self):
-        '''Called ever 20ms'''
-        pass
+        self.automodes.run()
         
     def disabledInit(self):
         '''Called only at the beginning of disabled mode'''
