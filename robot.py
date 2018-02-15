@@ -39,6 +39,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.claw_lintake_motor = None
 
         self.elevator_motor = None
+        self.climb_motor = None
+        self.claw_motor = None
 
         self.left_stick = None
         self.right_stick = None
@@ -103,6 +105,8 @@ class StampedeRobot(wpilib.IterativeRobot):
             'claw_rintake_motor': self.claw_rintake_motor,
             'claw_lintake_motor': self.claw_lintake_motor,
             'elevator_motor': self.elevator_motor
+            'climb_motor': self.climb_motor
+            'claw_motor': self.claw_motor
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
