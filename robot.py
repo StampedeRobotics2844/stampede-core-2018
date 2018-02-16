@@ -24,6 +24,10 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.smart_dashboard = None
 
+        self.kDistancePerRevolution = 18.84
+        self.kPulsesPerRevolution = 1440
+        self.kDistancePerPulse = self.kDistancePerRevolution / self.kPulsesPerRevolution
+
         self.drive_r_motor = None
         self.drive_l_motor = None
 
@@ -51,11 +55,12 @@ class StampedeRobot(wpilib.IterativeRobot):
         # initialize and launch the camera
         wpilib.CameraServer.launch()
 
-        self.encoder_wheel_1 = wpilib.Encoder(0,1)
-        self.encoder_wheel_2 = wpilib.Encoder(2,3)
 
-        self.encoder_wheel_1.setDistancePerPulse(1/76.397)
-        self.encoder_wheel_2.setDistancePerPulse(1/76.397)
+        self.encoder_wheel_1 = wpilib.Encoder(0,1,True,wpilib.Encoder.EncodingType.k4X)
+        self.encoder_wheel_2 = wpilib.Encoder(2,3,False,wpilib.Encoder.EncodingType.k4X)
+
+        self.encoder_wheel_1.setDistancePerPulse(self.kDistancePerPulse)
+        self.encoder_wheel_2.setDistancePerPulse(self.kDistancePerPulse)
 
         #Initalizing drive motors
         self.drive_l_motor = wpilib.Spark(portmap.motors.left_drive)
