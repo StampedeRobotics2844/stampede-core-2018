@@ -20,6 +20,8 @@ class StampedeRobot(wpilib.IterativeRobot):
     def __init__(self):
         super().__init__()
 
+        self.logger = logging.getLogger("Gladius")
+
         self.smart_dashboard = None
 
         self.drive_r_motor = None
@@ -33,6 +35,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.left_stick = None
         self.right_stick = None
         
+        self.encoder_wheel_1 = None
+        self.encoder_wheel_2 = None
 
         self.drive = None
 
@@ -46,6 +50,12 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         # initialize and launch the camera
         wpilib.CameraServer.launch()
+
+        self.encoder_wheel_1 = wpilib.Encoder(0,1)
+        self.encoder_wheel_2 = wpilib.Encoder(2,3)
+
+        self.encoder_wheel_1.setDistancePerPulse(1/76.397)
+        self.encoder_wheel_2.setDistancePerPulse(1/76.397)
 
         #Initalizing drive motors
         self.drive_l_motor = wpilib.Spark(portmap.motors.left_drive)
@@ -69,12 +79,9 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.right_stick = wpilib.Joystick(portmap.joysticks.right_joystick)
 
         # initialize gyro
-        #self.gyro = wpilib.ADXRS450_Gyro()
+        # self.gyro = wpilib.ADXRS450_Gyro()
 
         # initialize Accelerometer
-        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,
-        #    wpilib.ADXL345_SPI.Range.k2G)
-
 
     def autonomousInit(self):
         '''Called only at the beginning'''
@@ -95,6 +102,8 @@ class StampedeRobot(wpilib.IterativeRobot):
     def teleopInit(self):
         '''Called only at the beginning of teleoperated mode'''
         self.drive.setSafetyEnabled(True)
+        self.encoder_wheel_1.reset()
+        self.encoder_wheel_2.reset()
 
     def teleopPeriodic(self):
         '''Called every 20ms in teleoperated mode'''
@@ -104,7 +113,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             if self.left_stick.getRawButton(portmap.joysticks.red_button_intake):
                 self.claw_lintake_motor.set(1)
                 self.claw_rintake_motor.set(1)
-            elif self.right_stick.getRawButton(portmap.joysticks.blue_button_outtake):
+            elif self.left_stick.getRawButton(portmap.joysticks.blue_button_outtake):
                 self.claw_lintake_motor.set(-1)
                 self.claw_rintake_motor.set(-1)
             else:
@@ -130,6 +139,9 @@ class StampedeRobot(wpilib.IterativeRobot):
         except:
             if not self.isFMSAttached():
                 raise
+
+        self.logger.log(logging.INFO, "distance wheel 1: {0}".format(self.encoder_wheel_1.getDistance()))
+        self.logger.log(logging.INFO, "distance wheel 2: {0}".format(self.encoder_wheel_2.getDistance()))
 
     def isFMSAttached(self):
         return wpilib.DriverStation.getInstance().isFMSAttached()
