@@ -7,6 +7,12 @@ class RightForward(StatefulAutonomous):
     def initialize(self):
         self.register_sd_var('drive_speed', 1)
 
+    def getAverageEncoderPosition(self):
+        return (self.encoder_wheel_left.getDistance() + self.encoder_wheel_right.getDistance()) / 2
+
     @state(first=True)
     def drive_forward(self):
-        self.drive.tankDrive(leftValue=-0.5, rightValue=-0.5)
+        while self.getAverageEncoderPosition() < 50.0:
+            self.drive.tankDrive(leftValue=0.5, rightValue=0.5)
+        
+        self.drive.tankDrive(0,0)

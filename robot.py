@@ -51,8 +51,9 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.left_stick = None
         self.right_stick = None
         
-        self.encoder_wheel_1 = None
-        self.encoder_wheel_2 = None
+        self.encoder_wheel_left = None
+        self.encoder_wheel_right = None
+        self.encoder_lift = None
 
         self.drive = None
 
@@ -80,9 +81,11 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.encoder_wheel_left = wpilib.Encoder(0,1,True,wpilib.Encoder.EncodingType.k4X)
         self.encoder_wheel_right = wpilib.Encoder(2,3,False,wpilib.Encoder.EncodingType.k4X)
+        self.encoder_lift = wpilib.Encoder(4,5,True,wpilib.Encoder.EncodingType.k4X)
 
         self.encoder_wheel_left.setDistancePerPulse(self.kDistancePerPulse)
         self.encoder_wheel_right.setDistancePerPulse(self.kDistancePerPulse)
+        self.encoder_lift.setDistancePerPulse(self.kDistancePerPulse)
 
         #Initalizing drive motors
         self.drive_l_motor = wpilib.Spark(portmap.motors.left_drive)
@@ -147,6 +150,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.drive.setSafetyEnabled(True)
         self.encoder_wheel_left.reset()
         self.encoder_wheel_right.reset()
+        self.encoder_lift.reset()
 
     def teleopPeriodic(self):
         '''Called every 20ms in teleoperated mode'''
@@ -185,6 +189,7 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
         self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
+        self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
 
     def isFMSAttached(self):
         return wpilib.DriverStation.getInstance().isFMSAttached()
