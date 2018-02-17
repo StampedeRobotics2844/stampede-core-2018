@@ -16,7 +16,7 @@ class LeftForward(StatefulAutonomous):
     @state(first=True)
     def drive_forward(self):
         while self.getAverageEncoderPosition() < 50.0:
-            self.drive.tankDrive(leftValue=0.5, rightValue=0.5)
+            self.drive.tankDrive(-0.5, -0.5)
         if self.getAverageEncoderPosition() > 50.0:
             self.drive.tankDrive(0,0)
             self.encoder_wheel_left.reset()
@@ -26,7 +26,7 @@ class LeftForward(StatefulAutonomous):
     @state()
     def drive_turn_right(self):
         while self.getRTurnEncoderPosition() < 7.0:
-            self.drive.tankDrive(leftValue=0.5, rightValue=-0.5)
+            self.drive.tankDrive(0.5, -0.5)
 
         self.drive.tankDrive(0,0)
         

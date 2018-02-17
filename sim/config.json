@@ -1,0 +1,20 @@
+{
+    "pyfrc": {
+        "robot":{
+            "w": 2,
+            "h": 3,
+            "starting_x": 2,
+            "starting_y": 20,
+            "starting_angle": 0            
+        },
+        "field": {
+            "h": 45,
+            "w": 27,
+            "px_per_ft": 15,
+            "image": "2018-field.gif",
+            "game_specific_messages": [
+                "RRR", "RLR", "LRL", "LLL"
+            ]
+        }
+    }
+}

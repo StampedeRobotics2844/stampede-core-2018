@@ -13,6 +13,6 @@ class LeftForward(StatefulAutonomous):
     @state(first=True)
     def drive_forward(self):
         while self.getAverageEncoderPosition() < 50.0:
-            self.drive.tankDrive(leftValue=0.5, rightValue=0.5)
+            self.drive.tankDrive(-0.5, -0.5)
         
         self.drive.tankDrive(0,0)

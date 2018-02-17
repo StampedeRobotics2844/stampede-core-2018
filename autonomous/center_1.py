@@ -16,7 +16,7 @@ class CenterForward(StatefulAutonomous):
     @state(first=True)
     def drive_turn_right(self):
         while self.getRTurnEncoderPosition() < 7.0:
-            self.drive.tankDrive(leftValue=0.5, rightValue=-0.5)
+            self.drive.tankDrive(0.5, -0.5)
         
         if self.getRTurnEncoderPosition() > 7.0:
             self.drive.tankDrive(0,0)
@@ -27,6 +27,6 @@ class CenterForward(StatefulAutonomous):
     @state()
     def drive_forward(self):
         while self.getAverageEncoderPosition() < 50.0:
-            self.drive.tankDrive(leftValue=0.5, rightValue=-0.5)
+            self.drive.tankDrive(-0.5, -0.5)
         
         self.drive.tankDrive(0,0)
