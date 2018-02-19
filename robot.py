@@ -109,7 +109,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.right_stick = wpilib.Joystick(portmap.joysticks.right_joystick)
 
         # initialize gyro
-        # self.gyro = wpilib.ADXRS450_Gyro()
+        self.gyro = wpilib.ADXRS450_Gyro(wpilib.SPI.Port.kOnboardCS2)
 
         # initialize Accelerometer
         #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,
@@ -126,13 +126,15 @@ class StampedeRobot(wpilib.IterativeRobot):
             'climb_motor': self.climb_motor,
             'claw_motor': self.claw_motor,
             'encoder_wheel_left' : self.encoder_wheel_left,
-            'encoder_wheel_right' : self.encoder_wheel_right
+            'encoder_wheel_right' : self.encoder_wheel_right,
+            'gyro' : self.gyro
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
 
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
+        self.gyro.calibrate()
 
     def autonomousPeriodic(self):
         self.automodes.run()
@@ -151,6 +153,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.encoder_wheel_left.reset()
         self.encoder_wheel_right.reset()
         self.encoder_lift.reset()
+        self.gyro.calibrate()
 
     def teleopPeriodic(self):
         '''Called every 20ms in teleoperated mode'''
@@ -181,7 +184,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             else:
                 self.claw_motor.set(0)
 
-            self.drive.arcadeDrive(self.left_stick.getY(), -self.left_stick.getX(), True)
+            self.drive.tankDrive(self.left_stick.getY(), self.right_stick.getY(), True)
 
         except:
             if not self.isFMSAttached():
@@ -190,6 +193,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
         self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
         self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
+        self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
 
     def isFMSAttached(self):
         return wpilib.DriverStation.getInstance().isFMSAttached()
