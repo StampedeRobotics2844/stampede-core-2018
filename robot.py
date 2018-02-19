@@ -181,7 +181,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             else:
                 self.claw_motor.set(0)
 
-            self.drive.tankDrive(self.left_stick.getY(), self.right_stick.getY(), True)
+            self.drive.arcadeDrive(self.left_stick.getY(), -self.left_stick.getX(), True)
 
         except:
             if not self.isFMSAttached():
