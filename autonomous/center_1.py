@@ -22,16 +22,13 @@ class CenterForward(StatefulAutonomous):
         self.encoder_wheel_left = wpilib.Encoder(0,1,True,wpilib.Encoder.EncodingType.k4X)
         self.encoder_wheel_right = wpilib.Encoder(2,3,False,wpilib.Encoder.EncodingType.k4X)
     
-    def getRTurnEncoderPosition(self):
-        return (-self.encoder_wheel_left.getDistance() + self.encoder_wheel_right.getDistance()) / 2
-    
     def getAverageEncoderPosition(self):
         return (self.encoder_wheel_left.getDistance() + self.encoder_wheel_right.getDistance()) / 2
 
     @state(first=True)
     def drive_turn_right(self):
 
-        while self.getRTurnEncoderPosition() < 7.0:
+        while self.gyro.getAngle() < 30.0:
             self.drive.tankDrive(-0.5, 0.5)
             self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
             self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))

@@ -57,6 +57,10 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.drive = None
 
+        self.address= 0x53
+
+        self.range = None
+        self.rangeU = None
         self.gyro = None
         self.accel = None
 
@@ -111,9 +115,11 @@ class StampedeRobot(wpilib.IterativeRobot):
         # initialize gyro
         self.gyro = wpilib.ADXRS450_Gyro(wpilib.SPI.Port.kOnboardCS2)
 
+        self.range = wpilib.AnalogInput(0)
+        #self.rangeU = wpilib.Ultrasonic(0, 0)
+
         # initialize Accelerometer
-        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,
-        #    wpilib.ADXL345_SPI.Range.k2G)
+        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,wpilib.ADXL345_I2C.Range.k16G,0x53)
   
         # initialize autonomous components
         self.components = {
@@ -192,8 +198,10 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
         self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
-        self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
+        # self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
         self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
+        self.logger.log(logging.INFO, "range: {0}".format(self.range.getValue()))
+        #self.logger.log(logging.INFO, "accel x, y, z: {0}, {1}, {2}".format(self.accel.getX(), self.accel.getY(), self.accel.getZ()))
 
     def isFMSAttached(self):
         return wpilib.DriverStation.getInstance().isFMSAttached()
