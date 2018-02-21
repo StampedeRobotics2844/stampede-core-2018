@@ -64,6 +64,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.gyro = None
         self.accel = None
 
+        self.intake = False
+
     def robotInit(self):
         '''Robot-wide Initialization code'''
         #Initializing Smart Dashboard
@@ -119,7 +121,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         #self.rangeU = wpilib.Ultrasonic(0, 0)
 
         # initialize Accelerometer
-        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,wpilib.ADXL345_I2C.Range.k16G,0x53)
+        #self.accel = wpilib.ADXL345_I2C(wpilib.I2C.Port.kMXP,wpilib.ADXL345_I2C.Range.k16G,0x1D)
   
         # initialize autonomous components
         self.components = {
@@ -133,10 +135,41 @@ class StampedeRobot(wpilib.IterativeRobot):
             'claw_motor': self.claw_motor,
             'encoder_wheel_left' : self.encoder_wheel_left,
             'encoder_wheel_right' : self.encoder_wheel_right,
-            'gyro' : self.gyro
+            'gyro' : self.gyro,
+            'range' : self.range
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
+    
+    def clawIntake(self):
+        self.claw_lintake_motor.set(1)
+        self.claw_rintake_motor.set(1)
+
+    def clawOutake(self):
+        self.claw_lintake_motor.set(-1)
+        self.claw_rintake_motor.set(-1) 
+
+    def clawStopTake(self):
+        self.claw_lintake_motor.set(0)
+        self.claw_rintake_motor.set(0) 
+
+    def liftUp(self):
+        self.elevator_motor.set(1)      
+
+    def liftDown(self):
+        self.elevator_motor.set(-1)
+    
+    def liftStop(self):
+        self.elevator_motor.set(0)
+
+    def clawRUp(self):
+        self.claw_motor.set(1)
+
+    def clawRDown(self):
+        self.claw_motor.set(-1)
+
+    def clawRStop(self):
+        self.claw_motor.set(0)
 
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
@@ -165,30 +198,28 @@ class StampedeRobot(wpilib.IterativeRobot):
         '''Called every 20ms in teleoperated mode'''
         
         try:
+            
 
             if self.left_stick.getRawButton(portmap.joysticks.red_button_intake):
-                self.claw_lintake_motor.set(1)
-                self.claw_rintake_motor.set(1)
+                self.clawIntake()
             elif self.left_stick.getRawButton(portmap.joysticks.blue_button_outtake):
-                self.claw_lintake_motor.set(-1)
-                self.claw_rintake_motor.set(-1)
+                self.clawOutake()
             else:
-                self.claw_lintake_motor.set(0)
-                self.claw_rintake_motor.set(0)
+                self.clawStopTake()
 
             if self.left_stick.getRawButton(portmap.joysticks.yellow_button_up_elevator):
-                self.elevator_motor.set(1)
+                self.liftUp()
             elif self.left_stick.getRawButton(portmap.joysticks.green_button_down_elevator):
-                self.elevator_motor.set(-1)
+                self.liftDown()
             else:
-                self.elevator_motor.set(0)
+                self.liftStop()
             
             if self.left_stick.getRawButton(portmap.joysticks.white_button_claw_up):
-                self.claw_motor.set(1)
+                self.clawRUp()
             elif self.left_stick.getRawButton(portmap.joysticks.white_button_claw_down):
-                self.claw_motor.set(-1)
+                self.clawRDown()
             else:
-                self.claw_motor.set(0)
+                self.clawRStop()
 
             self.drive.tankDrive(self.left_stick.getY(), self.right_stick.getY(), True)
 

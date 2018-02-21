@@ -17,6 +17,7 @@ class LeftForward(StatefulAutonomous):
     def drive_forward(self):
         while self.getAverageEncoderPosition() < 50.0:
             self.drive.tankDrive(-0.5, -0.5)
+            self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
         if self.getAverageEncoderPosition() > 50.0:
             self.drive.tankDrive(0,0)
             self.encoder_wheel_left.reset()
@@ -27,6 +28,8 @@ class LeftForward(StatefulAutonomous):
     def drive_turn_right(self):
         while self.getRTurnEncoderPosition() < 7.0:
             self.drive.tankDrive(0.5, -0.5)
+            self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
+            self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
 
         self.drive.tankDrive(0,0)
         

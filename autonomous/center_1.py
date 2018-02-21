@@ -28,12 +28,11 @@ class CenterForward(StatefulAutonomous):
     @state(first=True)
     def drive_turn_right(self):
 
-        while self.gyro.getAngle() < 30.0:
+        while self.gyro.getAngle() < 45.0:
             self.drive.tankDrive(-0.5, 0.5)
-            self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
-            self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
+            self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
         
-        if self.getRTurnEncoderPosition() > 7.0:
+        if self.gyro.getAngle() > 45.0:
             self.drive.tankDrive(0,0)
             self.encoder_wheel_left.reset()
             self.encoder_wheel_right.reset()
