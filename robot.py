@@ -118,6 +118,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.gyro = wpilib.ADXRS450_Gyro(wpilib.SPI.Port.kOnboardCS2)
 
         self.range = wpilib.AnalogInput(0)
+
         #self.rangeU = wpilib.Ultrasonic(0, 0)
 
         # initialize Accelerometer
@@ -140,7 +141,35 @@ class StampedeRobot(wpilib.IterativeRobot):
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
-    
+
+    def getDistance(self):
+        '''
+        [(Vcc/1024) = Vi]
+        Vcc = Supplied Voltage
+        Vi = Volts per 5 mm (Scaling)
+        
+        Example 1: Say you have an input voltage of +5.0V the formula would read:
+        [(5.0V/1024) = 0.004883V per 5 mm = 4.883mV per 5 mm]
+        
+        Calculating the Range
+        Once you know the voltage scaling it is easy to properly calculate the range.
+        
+        The range formula is:
+        [5*(Vm/Vi) = Ri]
+        Vm = Measured Voltage
+        Ri = Range in mm
+        Vi = Volts per 5 mm (Scaling)
+        '''
+
+        voltage_scaling = 5.0/1024
+        measured_voltages = self.range.getVoltage()
+        distance = 5 * (measured_voltages/voltage_scaling)
+        mmToInchScaling = 0.03937007874
+
+        self.logger.log(logging.INFO, "measured voltage: {0}, distance: {1} mm, distnace: {2} inches".format(measured_voltages, distance, distance*mmToInchScaling))
+
+        return distance
+
     def clawIntake(self):
         self.claw_lintake_motor.set(1)
         self.claw_rintake_motor.set(1)
@@ -231,7 +260,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
         # self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
         self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
-        self.logger.log(logging.INFO, "range: {0}".format(self.range.getValue()))
+        self.logger.log(logging.INFO, "range: {0}".format(self.getDistance()))
         #self.logger.log(logging.INFO, "accel x, y, z: {0}, {1}, {2}".format(self.accel.getX(), self.accel.getY(), self.accel.getZ()))
 
     def isFMSAttached(self):
