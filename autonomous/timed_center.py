@@ -16,6 +16,7 @@ class TCenterForward(StatefulAutonomous):
     @timed_state(duration=0.5,first=True,next_state='drive_forward')
     def drive_turn_right(self):
         self.drive.tankDrive(-0.6, 0.5)
+        self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
     
     @timed_state(duration=2.2,next_state='drive_turn_left')
     def drive_forward(self):

@@ -10,6 +10,7 @@ motors.right_intake = 2
 motors.claw = 5
 motors.climb = 0
 motors.elevator = 1
+motors.twoelevator = 4
 
 joysticks = PortMap()
 

@@ -26,6 +26,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.smart_dashboard = None
         self.motor_speed_stop = 0
 
+        self.gameData = None
+
         self.robot_speed = None
         self.intake_speed = None
         self.outake_speed = None
@@ -45,6 +47,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.claw_lintake_motor = None
 
         self.elevator_motor = None
+        self.twoelevator_motor = None
         self.climb_motor = None
         self.claw_motor = None
 
@@ -82,8 +85,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.smart_dashboard.putNumber('climber_speed', 1)
 
         # initialize and launch the camera
-        wpilib.CameraServer.launch()
-
+        # wpilib.CameraServer.launch()
 
         self.encoder_wheel_left = wpilib.Encoder(0,1,True,wpilib.Encoder.EncodingType.k4X)
         self.encoder_wheel_right = wpilib.Encoder(2,3,False,wpilib.Encoder.EncodingType.k4X)
@@ -101,6 +103,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.claw_rintake_motor = wpilib.Victor(portmap.motors.right_intake)
 
         self.elevator_motor = wpilib.Spark(portmap.motors.elevator)
+        self.twoelevator_motor = wpilib.Victor(portmap.motors.twoelevator)
 
         self.climb_motor = wpilib.Victor(portmap.motors.climb)
 
@@ -171,8 +174,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         return distance
 
     def clawIntake(self):
-        self.claw_lintake_motor.set(1)
-        self.claw_rintake_motor.set(1)
+        self.claw_lintake_motor.set(0.7)
+        self.claw_rintake_motor.set(0.7)
 
     def clawOutake(self):
         self.claw_lintake_motor.set(-1)
@@ -183,13 +186,16 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.claw_rintake_motor.set(0) 
 
     def liftUp(self):
-        self.elevator_motor.set(1)      
+        self.elevator_motor.set(1)
+        self.twoelevator_motor.set(1) 
 
     def liftDown(self):
         self.elevator_motor.set(-1)
+        self.twoelevator_motor.set(-1)
     
     def liftStop(self):
         self.elevator_motor.set(0)
+        self.twoelevator_motor.set(0)
 
     def clawRUp(self):
         self.claw_motor.set(1)
@@ -203,7 +209,8 @@ class StampedeRobot(wpilib.IterativeRobot):
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
         self.gyro.calibrate()
-
+        self.gameData = self.getGameSpecificData()
+        
     def autonomousPeriodic(self):
         self.automodes.run()
         
@@ -250,7 +257,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             else:
                 self.clawRStop()
 
-            self.drive.tankDrive(self.left_stick.getY(), self.right_stick.getY(), True)
+            self.drive.tankDrive(self.right_stick.getY() * 0.5, self.left_stick.getY() * 0.5, False)
 
         except:
             if not self.isFMSAttached():
@@ -265,6 +272,9 @@ class StampedeRobot(wpilib.IterativeRobot):
 
     def isFMSAttached(self):
         return wpilib.DriverStation.getInstance().isFMSAttached()
+
+    def getGameSpecificData(self):
+        return wpilib.DriverStation.getInstance().getGameSpecificData()
 
 if __name__ == '__main__':
     wpilib.run(StampedeRobot)
