@@ -3,14 +3,14 @@ class PortMap:
 
 motors = PortMap()
 
-motors.left_drive = 8
-motors.right_drive = 9
-motors.left_intake = 3
-motors.right_intake = 2
+motors.left_drive = 8 #black
+motors.right_drive = 9 #purple
+motors.left_intake = 3 #red
+motors.right_intake = 2 #green
 motors.claw = 5
 motors.climb = 0
-motors.elevator = 1
-motors.twoelevator = 4
+motors.elevator = 1 #yellow
+motors.twoelevator = 4 #blue
 
 joysticks = PortMap()
 

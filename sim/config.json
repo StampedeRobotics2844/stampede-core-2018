@@ -4,7 +4,7 @@
             "w": 2,
             "h": 3,
             "starting_x": 2,
-            "starting_y": 20,
+            "starting_y": 20.5,
             "starting_angle": 0            
         },
         "field": {
@@ -13,7 +13,7 @@
             "px_per_ft": 15,
             "image": "2018-field.gif",
             "game_specific_messages": [
-                "RRR", "RLR", "LRL", "LLL"
+                "RRR", "RLR", "RLL", "LLR", "LRL", "LLL"
             ]
         }
     }

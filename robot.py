@@ -106,7 +106,6 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.twoelevator_motor = wpilib.Victor(portmap.motors.twoelevator)
 
         self.climb_motor = wpilib.Victor(portmap.motors.climb)
-
         self.claw_motor = wpilib.Victor(portmap.motors.claw)
 
         # initialize drive
@@ -140,7 +139,8 @@ class StampedeRobot(wpilib.IterativeRobot):
             'encoder_wheel_left' : self.encoder_wheel_left,
             'encoder_wheel_right' : self.encoder_wheel_right,
             'gyro' : self.gyro,
-            'range' : self.range
+            'range' : self.range,
+            'gameData' : self.gameData
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
@@ -174,8 +174,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         return distance
 
     def clawIntake(self):
-        self.claw_lintake_motor.set(0.7)
-        self.claw_rintake_motor.set(0.7)
+        self.claw_lintake_motor.set(0.55)
+        self.claw_rintake_motor.set(0.55)
 
     def clawOutake(self):
         self.claw_lintake_motor.set(-1)
@@ -210,7 +210,8 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.drive.setSafetyEnabled(True)
         self.gyro.calibrate()
         self.gameData = self.getGameSpecificData()
-        
+        self.logger.log(logging.INFO, "Game Data: {0}".format(self.gameData))
+
     def autonomousPeriodic(self):
         self.automodes.run()
         
@@ -235,7 +236,6 @@ class StampedeRobot(wpilib.IterativeRobot):
         
         try:
             
-
             if self.left_stick.getRawButton(portmap.joysticks.red_button_intake):
                 self.clawIntake()
             elif self.left_stick.getRawButton(portmap.joysticks.blue_button_outtake):
@@ -265,7 +265,7 @@ class StampedeRobot(wpilib.IterativeRobot):
 
         self.logger.log(logging.INFO, "distance wheel left: {0}".format(self.encoder_wheel_left.getDistance()))
         self.logger.log(logging.INFO, "distance wheel right: {0}".format(self.encoder_wheel_right.getDistance()))
-        # self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
+        #self.logger.log(logging.INFO, "distance lift: {0}".format(self.encoder_lift.getDistance()))
         self.logger.log(logging.INFO, "gyro angle: {0}".format(self.gyro.getAngle()))
         self.logger.log(logging.INFO, "range: {0}".format(self.getDistance()))
         #self.logger.log(logging.INFO, "accel x, y, z: {0}, {1}, {2}".format(self.accel.getX(), self.accel.getY(), self.accel.getZ()))
@@ -274,7 +274,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         return wpilib.DriverStation.getInstance().isFMSAttached()
 
     def getGameSpecificData(self):
-        return wpilib.DriverStation.getInstance().getGameSpecificData()
+        return wpilib.DriverStation.getInstance().getGameSpecificMessage()
 
 if __name__ == '__main__':
     wpilib.run(StampedeRobot)
