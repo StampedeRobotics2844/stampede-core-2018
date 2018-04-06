@@ -85,7 +85,7 @@ class StampedeRobot(wpilib.IterativeRobot):
         self.smart_dashboard.putNumber('climber_speed', 1)
 
         # initialize and launch the camera
-        # wpilib.CameraServer.launch()
+        wpilib.CameraServer.launch()
 
         self.encoder_wheel_left = wpilib.Encoder(0,1,True,wpilib.Encoder.EncodingType.k4X)
         self.encoder_wheel_right = wpilib.Encoder(2,3,False,wpilib.Encoder.EncodingType.k4X)
@@ -134,6 +134,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             'claw_rintake_motor': self.claw_rintake_motor,
             'claw_lintake_motor': self.claw_lintake_motor,
             'elevator_motor': self.elevator_motor,
+            'twoelevator_motor': self.twoelevator_motor,
             'climb_motor': self.climb_motor,
             'claw_motor': self.claw_motor,
             'encoder_wheel_left' : self.encoder_wheel_left,
@@ -257,7 +258,7 @@ class StampedeRobot(wpilib.IterativeRobot):
             else:
                 self.clawRStop()
 
-            self.drive.tankDrive(self.right_stick.getY() * 0.5, self.left_stick.getY() * 0.5, False)
+            self.drive.tankDrive(self.left_stick.getY() * 0.7, self.right_stick.getY() * 0.7, False)
 
         except:
             if not self.isFMSAttached():
