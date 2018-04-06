@@ -209,6 +209,8 @@ class StampedeRobot(wpilib.IterativeRobot):
 
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
+        self.encoder_wheel_left.reset()
+        self.encoder_wheel_right.reset()
         self.gyro.calibrate()
         self.gameData = self.getGameSpecificData()
         self.logger.log(logging.INFO, "Game Data: {0}".format(self.gameData))
